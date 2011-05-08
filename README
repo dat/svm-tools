@@ -1,0 +1,90 @@
+SVM Training Utilities
+
+Author: dth
+
+Description:
+
+    This collection of utilities provide support to convert ARFF file to SVM file
+    format, shuffling, remapping, and distributed grid searching across multiple computers.
+
+Requirements:
+    - ssh client
+    - bash
+    - Python 3.0+
+    - svm-train, svm-predict, svm-scale (provided by LIBSVM)
+
+Utilities:
+    All utilities provide help/usage message when invoked with -h or --help flags.
+    - aliasing.py : alias all the utilities to your shell 
+    - arff2svm.py : convert ARFF file format to SVM file format
+    - grid-search.py : distributed grid searching across (c,g)
+    - report.py : generate accuracy report with confusion matrices
+    - shuffle.sh : shuffle lines of a file
+    - svm-remap.py : remapping SVM files to each other to matching fields
+
+ARFF Format:
+    The ARFF (Attribute-Relation File Format) format was devised by the Machine
+    Learning Project at the Department of Computer Science of The University of
+    Waikato for use with the Weka machine learning software. More information
+    can be found here (http://www.cs.waikato.ac.nz/~ml/weka/arff.html).
+
+    The data section of of an ARFF file obeys the following Backus-Naur Form:
+
+    <line> ::= (<value> ",")+ <category>
+    <value> ::= <float>
+    <category> ::= <string>
+
+SVM Format:
+    SVM format obeys the following Backus-Naur Form, originated from this
+    (http://www.cs.cornell.edu/People/tj/svm_light/):
+
+    <line> ::= <target> (<feature> ":" <value>)+
+    <target> ::= <positive-integer>
+    <feature> ::= <positive-integer>
+    <value> ::= <float>
+
+    Features with value zero can be skipped.
+
+Instructions:
+
+a) Set up remoteless SSH.
+
+b) Setting up the utilities.
+
+    1. Edit grid-search.py to the desired number of processes to spawn, SSH servers to use,
+        location of svm-train on each server, and additional arguments to svm-train.
+    2. Edit report.py to the location of svm-predict on each server.
+
+c) Example:
+    Suppose you want to conduct grid searching on 5,000 random data points of 10,000-point dataset
+    train.arff file using 5-fold cross validation. Then use the best parameters found to create a 
+    model with the entire 10,000-point dataset and test that on 500-point test.arff file.
+
+    1. arff2svm train.fields train.arff train.svm
+    2. arff2svm test.fields test.arff tmp.svm
+    3. svm-remap test.fields train.fields tmp.svm test.svm
+    4. svm-scale -l 0 -u 1 -s scaling_parameters train.svm > trains.svm
+    5. svm-scale -l 0 -u 1 -r scaling_parameters test.svm > tests.svm
+    4. shuffle trains.svm
+    3. head -n 5000 trains.svm > grid.svm
+    4. Distribute grid.svm across all the computing nodes. We will assume as "~/shared/grid.svm".
+    5. grid-search --log2c -5 5 1 --log2g -5 5 1 --fold 5 "~/shared/grid.svm" gridscore.file
+    6. Examine gridscore.file to find the best (log2c, log2g) parameters.
+        Suppose they are log2c=1, log2g=0; thus c = 2^log2c = 2, g = 2^log2g = 1.
+    7. svm-train -h 0 -t 2 -c 2 -g 1 trains.svm model_t2-c2-g1
+    8. report --fields train.fields model_t2-c2-g1 tests.svm
+
+Recommendations:
+    A good way to automatically distribute files across the servers is to run an NFS server
+    on the head node serving the directory ~/shared. Put svm-train, svm-predict, svm-scale,
+    and all training/testing data into that directory. Create "~/shared" directory on each
+    computing node and mount the head node's "~/shared" folder onto that directory via NFS.
+    This way any changes made to the data files and binaries will be propagated to each node.
+
+    To ensure that your SSH session don't automatically log out when it is idle during a long
+    calculation, add the following line to ~/.ssh/config or to /etc/ssh_config on the client:
+
+        ServerAliveInterval 60
+
+    This will send a "keep alive" signal to the server every 60 seconds.
+
