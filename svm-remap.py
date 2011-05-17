@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 """Remap SVM target of every line from one numeric target to another
-based on the name file of every target."""
+based on the name file of every target.
+@author Dat Hoang
+@date March 2011"""
 
 import sys
 import csv

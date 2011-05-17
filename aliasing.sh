@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#Alias tool names into current shell.
+#author: dth
+
 if [ "$1" = "-h" -o "$1" = "--help" ]
 then
     echo "Usage: . ./aliasing.sh" > /dev/stderr

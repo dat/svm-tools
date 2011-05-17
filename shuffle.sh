@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 #Simple script to shuffle all lines in a text file.
+#author: dth
 
 if [ $# -ne 1 -o "$1" = "-h" -o "$1" = "--help" ]
 then

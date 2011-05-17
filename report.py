@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 """Generate an accuracy report with confusion matrix for
-a given SVM model on a test data set."""
+a given SVM model on a test data set.
+@author Dat Hoang
+@date March 2011"""
 
 import csv
 import sys

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-"""Convert ARFF feature vector file to SVM feature vector file."""
+"""Convert ARFF feature vector file to SVM feature vector file.
+@author Dat Hoang
+@date March 2011"""
 
 import sys
 import csv

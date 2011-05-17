@@ -38,7 +38,7 @@ SVM Format:
     SVM format obeys the following Backus-Naur Form, originated from this
     (http://www.cs.cornell.edu/People/tj/svm_light/):
 
-    <line> ::= <target> (<feature> ":" <value>)+
+    <line> ::= <target> " " (<feature> ":" <value>)+
     <target> ::= <positive-integer>
     <feature> ::= <positive-integer>
     <value> ::= <float>

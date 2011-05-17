@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 """Distributed grid searching for optimal Radial Basis Function (RBF)
-kernel parameters (C, g) for SVM training."""
+kernel parameters (C, g) for SVM training.
+@author Dat Hoang
+@date March 2011"""
 
 import os
 import sys
