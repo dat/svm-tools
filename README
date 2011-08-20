@@ -1,4 +1,4 @@
-SVM Training Utilities
+Support Vector Machine Training Utilities
 
 Author: dth
 
@@ -11,7 +11,7 @@ Requirements:
     - ssh client
     - bash
     - Python 3.0+
-    - svm-train, svm-predict, svm-scale (provided by LIBSVM)
+    - svm-train, svm-predict, svm-scale (provided by LIBSVM library)
 
 Utilities:
     All utilities provide help/usage message when invoked with -h or --help flags.
